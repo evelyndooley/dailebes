@@ -1,7 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
+from datetime import datetime, timedelta, timezone
+from weather import get_weather, fig2img
 import os
-from io import BytesIO
-from weather import get_weather
+import pytz
 
 # Define constants
 API_KEY = os.environ.get('WEATHER_API')
@@ -9,21 +10,30 @@ WIDTH, HEIGHT = 800, 480
 FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
+FONT_SIZE_BIG = 32
+NAME = os.environ.get('USER')
 
-def fig2img(fig):
-    # Convert a Matplotlib figure to a PIL Image and return it
-    buf = BytesIO()
-    fig.savefig(buf, dpi=72)
-    buf.seek(0)
-    img = Image.open(buf)
-    return img
-
-# print(data)
+# Get the current time
+eastern = pytz.timezone('US/Eastern')
+current_time = datetime.now().astimezone(eastern)
 
 # Create a new image with a white background
 pic = Image.new('RGB', (WIDTH, HEIGHT), 'white')
 draw = ImageDraw.Draw(pic)
 font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
+font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
+font_big = ImageFont.truetype(FONT_PATH, FONT_SIZE_BIG)
+
+# Create header text
+header_text = f"Hello, {NAME}"
+if current_time.hour < 12:
+    header_text = f"Good morning, {NAME}"
+elif 12 <= current_time.hour < 17:
+    header_text = f"Good afternoon, {NAME}"
+elif 17 <= current_time.hour:
+    header_text = f"Good evening, {NAME}"
+
+draw.text((20, 20), header_text, fill='black', font=font_big)
 
 # for i, item in enumerate(data['list'][:24]):  # get data for 24 hours 
 #     time = datetime.strptime(item['dt_txt'], '%Y-%m-%d %H:%M:%S')
@@ -43,7 +53,7 @@ fig = get_weather(API_KEY)
 
 fig = fig2img(fig)
 
-pic.paste(fig, (0, 178))
+pic.paste(fig, (-25, 260))
 
 # Save the image
 pic.save('weather_forecast.png')
