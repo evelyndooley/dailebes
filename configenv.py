@@ -1,0 +1,3 @@
+from os import environ as env
+
+OPENWEATHERMAP_API_KEY = env.get('WEATHER_API')

@@ -13,6 +13,12 @@ FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
 NAME = os.environ.get('USER')
 
+# Get app config from absolute file path
+if os.path.exists(os.path.join(os.getcwd(), "config.py")):
+    import config as cfg
+else:
+    import configenv as cfg
+
 # Get the current time
 eastern = pytz.timezone('US/Eastern')
 current_time = datetime.now().astimezone(eastern)
@@ -49,7 +55,7 @@ draw.text((20, 20), header_text, fill='black', font=font_big)
 #     icon_img = Image.open(BytesIO(icon_response.content))
 #     img.paste(icon_img, (600, 20 + i*20))
 
-fig = get_weather(API_KEY)
+fig = get_weather(cfg.OPENWEATHERMAP_API_KEY)
 
 fig = fig2img(fig)
 
