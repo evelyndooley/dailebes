@@ -1,4 +1,5 @@
 import requests
+import os
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from PIL import Image
@@ -86,10 +87,12 @@ def get_weather(apikey):
 
         ax.text(times[i], temps[i] + offset_val, str(int(temps[i])) + "°F", fontdict=fonts, zorder=5)
 
-        try:
+        if(not os.path.exists("icon/")): os.mkdir("icon/")
+
+        if(os.path.exists(f"icon/{icon}.png")):
             img = Image.open(f"icon/{icon}.png")
 
-        except:
+        else:
             # Download the weather icon
             icon_url = f'http://openweathermap.org/img/w/{icon}.png'
             response = requests.get(icon_url)
