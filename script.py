@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime, timedelta, timezone
 from weather import get_weather, fig2img
+from epd import display_image
 import os
 import pytz
 
@@ -60,6 +61,8 @@ fig = get_weather(cfg.OPENWEATHERMAP_API_KEY)
 fig = fig2img(fig)
 
 pic.paste(fig, (-25, 260))
+
+display_image(pic)
 
 # Save the image
 pic.save('weather_forecast.png')

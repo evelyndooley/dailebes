@@ -2,3 +2,4 @@ requests
 pillow
 matplotlib
 pytz
+omni-epd @ git+https://github.com/robweber/omni-epd.git#egg=omni-epd
