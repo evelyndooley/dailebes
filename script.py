@@ -2,13 +2,14 @@ from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime, timedelta, timezone
 from weather import get_weather, fig2img
 from epd import display_image
+from rss import print_top_headlines
 import os
 import pytz
 
 # Define constants
-API_KEY = os.environ.get('WEATHER_API')
 WIDTH, HEIGHT = 800, 480
-FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
@@ -28,7 +29,7 @@ pic = Image.new('RGB', (WIDTH, HEIGHT), 'white')
 draw = ImageDraw.Draw(pic)
 font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
 font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
-font_big = ImageFont.truetype(FONT_PATH, FONT_SIZE_BIG)
+font_big = ImageFont.truetype(FONT_PATH_BOLD, FONT_SIZE_BIG)
 
 # Create header text
 header_text = f"Hello, {cfg.NAME}"
@@ -41,28 +42,19 @@ elif 17 <= current_time.hour:
 
 draw.text((20, 20), header_text, fill='black', font=font_big)
 
-# for i, item in enumerate(data['list'][:24]):  # get data for 24 hours 
-#     time = datetime.strptime(item['dt_txt'], '%Y-%m-%d %H:%M:%S')
-#     time_format = time.strftime("%A, %B %d - %I:%M %p")
-#     # Draw the time
-#     draw.text((20, 20 + i*20), time_format, fill='black', font=font)
+# Create RSS feed
+feed = print_top_headlines(cfg.RSS_URL, 8)
+for i, item in enumerate(feed):  # get data for 24 hours 
+    draw.text((20, 60 + i*20), item.title, fill='black', font=font_small)
 
-#     # Draw the temperature
-#     draw.text((400, 20 + i*20), str(int(item['main']['temp'])) + '°F', fill='black', font=font)
-
-#     # Draw the icon
-#     icon_response = requests.get(f'http://openweathermap.org/img/w/{item["weather"][0]["icon"]}.png')
-#     icon_img = Image.open(BytesIO(icon_response.content))
-#     img.paste(icon_img, (600, 20 + i*20))
-
+# Draw weather
 fig = get_weather(cfg.OPENWEATHERMAP_API_KEY)
-
 fig = fig2img(fig)
-
 pic.paste(fig, (-25, 260))
 
 # Save the image
 pic.save('weather_forecast.png')
 
+# Render to EPD
 display_image(pic)
 

@@ -2,4 +2,5 @@ requests
 pillow
 matplotlib
 pytz
+feedparser
 omni-epd @ git+https://github.com/robweber/omni-epd.git#egg=omni-epd

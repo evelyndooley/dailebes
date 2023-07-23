@@ -9,6 +9,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import numpy as np
 import pytz
 
+# Constants
 ICON_FOLDER = './icons/'
 LOCATION = 'Boston'  # Your location
 LAT = 42.3875968
@@ -16,7 +17,8 @@ LON = -71.0994968
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 
-fonts = {'size': 14}
+fonts = {'size': 16}
+eastern = pytz.timezone('US/Eastern')
 
 # Set the font size
 plt.rc('font', size=FONT_SIZE)
@@ -47,9 +49,6 @@ def get_weather(apikey):
     # Convert the 'dt_txt' field to datetime and get the 'temp' field
     times_and_temps = [(utc_to_local(datetime.utcfromtimestamp(item['dt'])), item['temp'], item['weather'][0]['icon']) for item in data['hourly']]
 
-
-    eastern = pytz.timezone('US/Eastern')
-
     # Get the current time
     current_time = datetime.now().astimezone(eastern)
 
@@ -59,20 +58,14 @@ def get_weather(apikey):
         if current_time - timedelta(hours=1) <= item[0] <= current_time + timedelta(hours=21)
     ]
 
-    current_weather = ((utc_to_local(datetime.utcfromtimestamp(data['current']['dt'])), data['current']['temp'], data['current']['weather'][0]['icon']))
-
-    # print(current_weather)
-
-    filtered_times_and_temps.append(current_weather)
-
+    # Add an entry for the current weather
+    # current_weather = ((utc_to_local(datetime.utcfromtimestamp(data['current']['dt'])), data['current']['temp'], data['current']['weather'][0]['icon']))
+    # filtered_times_and_temps.append(current_weather)
     filtered_times_and_temps.sort()
 
     times = [item[0] for item in filtered_times_and_temps]
     temps = [item[1] for item in filtered_times_and_temps]
     icons = [item[2] for item in filtered_times_and_temps]
-
-    # print(current_time)
-    # print(filtered_times_and_temps)
 
     fig, ax = plt.subplots(figsize=(12, 3))  
 
@@ -87,11 +80,10 @@ def get_weather(apikey):
 
         ax.text(times[i], temps[i] + offset_val, str(int(temps[i])) + "°F", fontdict=fonts, zorder=5)
 
+        # Add icons
         if(not os.path.exists("icon/")): os.mkdir("icon/")
-
         if(os.path.exists(f"icon/{icon}.png")):
             img = Image.open(f"icon/{icon}.png")
-
         else:
             # Download the weather icon
             icon_url = f'http://openweathermap.org/img/w/{icon}.png'
@@ -119,7 +111,7 @@ def get_weather(apikey):
     if max(times).date() > current_time.date():
         # Add a vertical line at midnight of the next day
         midnight_next_day = datetime(current_time.year, current_time.month, current_time.day) + timedelta(days=1)
-        plt.axvline(midnight_next_day.astimezone(eastern), color='r', linestyle=':', zorder=4)
+        plt.axvline(midnight_next_day.astimezone(eastern), color='r', linestyle='--', zorder=4)
         # Add a label with the month and day
         plt.text(
             midnight_next_day.astimezone(eastern)+timedelta(minutes=10), 
@@ -130,12 +122,11 @@ def get_weather(apikey):
             fontdict=fonts
         )
 
-
     # Format x-axis to show time
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p', tz="US/Eastern"))
 
     # Add labels and title
     plt.ylabel('Temperature (F)')
-    plt.title(f"{current_time.strftime('%A, %B %d')} - {data['daily'][0]['summary']}")
+    plt.title(f"{current_time.strftime('%A, %B %d')} - {data['daily'][0]['summary']}", fontdict={'size': 20})
 
     return plt
