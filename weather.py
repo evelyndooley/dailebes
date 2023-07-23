@@ -115,6 +115,22 @@ def get_weather(apikey):
     # Add a colored line indicating the current time
     plt.axvline(current_time, color='r', linestyle='--', zorder=4)
 
+    # Check if the data spans two days
+    if max(times).date() > current_time.date():
+        # Add a vertical line at midnight of the next day
+        midnight_next_day = datetime(current_time.year, current_time.month, current_time.day) + timedelta(days=1)
+        plt.axvline(midnight_next_day.astimezone(eastern), color='r', linestyle=':', zorder=4)
+        # Add a label with the month and day
+        plt.text(
+            midnight_next_day.astimezone(eastern)+timedelta(minutes=10), 
+            max(temps), 
+            midnight_next_day.strftime("%B %d"), 
+            rotation=90, 
+            verticalalignment='top', 
+            fontdict=fonts
+        )
+
+
     # Format x-axis to show time
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p', tz="US/Eastern"))
 
