@@ -12,7 +12,6 @@ FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
-NAME = os.environ.get('USER')
 
 # Get app config from absolute file path
 if os.path.exists(os.path.join(os.getcwd(), "config.py")):
@@ -32,13 +31,13 @@ font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
 font_big = ImageFont.truetype(FONT_PATH, FONT_SIZE_BIG)
 
 # Create header text
-header_text = f"Hello, {NAME}"
+header_text = f"Hello, {cfg.NAME}"
 if current_time.hour < 12:
-    header_text = f"Good morning, {NAME}"
+    header_text = f"Good morning, {cfg.NAME}"
 elif 12 <= current_time.hour < 17:
-    header_text = f"Good afternoon, {NAME}"
+    header_text = f"Good afternoon, {cfg.NAME}"
 elif 17 <= current_time.hour:
-    header_text = f"Good evening, {NAME}"
+    header_text = f"Good evening, {cfg.NAME}"
 
 draw.text((20, 20), header_text, fill='black', font=font_big)
 
@@ -62,8 +61,8 @@ fig = fig2img(fig)
 
 pic.paste(fig, (-25, 260))
 
-display_image(pic)
-
 # Save the image
 pic.save('weather_forecast.png')
+
+display_image(pic)
 

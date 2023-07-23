@@ -110,7 +110,7 @@ def get_weather(apikey):
         ax.add_artist(ab)
 
     # plot the data
-    ax.plot(times, temps, marker='o', zorder=3)
+    ax.plot(times, temps, marker='o', zorder=3, color='b')
 
     # Add a colored line indicating the current time
     plt.axvline(current_time, color='r', linestyle='--', zorder=4)
