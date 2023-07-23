@@ -48,9 +48,9 @@ for i, item in enumerate(feed):  # get data for 24 hours
     draw.text((20, 60 + i*20), item.title, fill='black', font=font_small)
 
 # Draw weather
-fig = get_weather(cfg.OPENWEATHERMAP_API_KEY)
+fig = get_weather(cfg.OPENWEATHERMAP_API_KEY, 12, 4)
 fig = fig2img(fig)
-pic.paste(fig, (-25, 260))
+pic.paste(fig, (-25, 200))
 
 # Save the image
 pic.save('weather_forecast.png')

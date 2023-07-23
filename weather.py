@@ -40,7 +40,7 @@ def fig2img(fig):
     img = Image.open(buf)
     return img
 
-def get_weather(apikey):
+def get_weather(apikey, length, width):
     # Make a request to the OpenWeatherMap API
     response = requests.get(f'http://api.openweathermap.org/data/3.0/onecall?'
                             f'lat={LAT}&lon={LON}&units=imperial&appid={apikey}')
@@ -67,7 +67,7 @@ def get_weather(apikey):
     temps = [item[1] for item in filtered_times_and_temps]
     icons = [item[2] for item in filtered_times_and_temps]
 
-    fig, ax = plt.subplots(figsize=(12, 3))  
+    fig, ax = plt.subplots(figsize=(length, width))  
 
     # Add temperature values and weather icons as data point labels
     for i, icon in enumerate(icons):
