@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import numpy as np
 import pytz
+import sys
 
 # Constants
 LOCATION = 'Boston'  # Your location
@@ -16,6 +17,7 @@ LON = -71.0994968
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 
+script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 fonts = {'size': 16}
 eastern = pytz.timezone('US/Eastern')
 
@@ -80,9 +82,9 @@ def get_weather(apikey, length, width):
         ax.text(times[i], temps[i] + offset_val, str(int(temps[i])) + "°F", fontdict=fonts, zorder=5)
 
         # Add icons
-        if(not os.path.exists(os.path.join(os.getcwd(), "icon/"))): os.mkdir(os.path.join(os.getcwd(), "icon/"))
-        if(os.path.exists(os.path.join(os.getcwd(), f"icon/{icon}.png"))):
-            img = Image.open(os.path.join(os.getcwd(), f"icon/{icon}.png"))
+        if(not os.path.exists(os.path.join(script_directory, "icon/"))): os.mkdir(os.path.join(script_directory, "icon/"))
+        if(os.path.exists(os.path.join(script_directory, f"icon/{icon}.png"))):
+            img = Image.open(os.path.join(script_directory, f"icon/{icon}.png"))
         else:
             # Download the weather icon
             icon_url = f'http://openweathermap.org/img/w/{icon}.png'
@@ -91,7 +93,7 @@ def get_weather(apikey, length, width):
             img_array = np.array(img)
             img_array[:, :, -1] = 255 * (img_array[:, :, -1] > 128)
             img = Image.fromarray(img_array)
-            img.save(os.path.join(os.getcwd(), f"icon/{icon}.png"))
+            img.save(os.path.join(script_directory, f"icon/{icon}.png"))
 
         # Create an image box
         imagebox = OffsetImage(img, zoom=1)

@@ -4,6 +4,7 @@ from weather import get_weather, fig2img
 from epd import display_image
 from rss import print_top_headlines
 import os
+import sys
 import pytz
 
 # Define constants
@@ -13,9 +14,10 @@ FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
+script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 # Get app config from absolute file path
-if os.path.exists(os.path.join(os.getcwd(), "config.py")):
+if os.path.exists(os.path.join(script_directory, "config.py")):
     import config as cfg
 else:
     import configenv as cfg
@@ -53,7 +55,7 @@ fig = fig2img(fig)
 pic.paste(fig, (-25, 200))
 
 # Save the image
-pic.save(os.path.join(os.getcwd(), 'weather_forecast.png'))
+pic.save(os.path.join(script_directory, 'weather_forecast.png'))
 
 # Render to EPD
 display_image(pic)
