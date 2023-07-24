@@ -53,7 +53,7 @@ fig = fig2img(fig)
 pic.paste(fig, (-25, 200))
 
 # Save the image
-pic.save('weather_forecast.png')
+pic.save(os.path.join(os.getcwd(), 'weather_forecast.png'))
 
 # Render to EPD
 display_image(pic)
