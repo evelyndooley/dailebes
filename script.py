@@ -35,7 +35,7 @@ font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
 font_big = ImageFont.truetype(FONT_PATH_BOLD, FONT_SIZE_BIG)
 
 # Add background image
-pic.paste(Image.open('image/test.png'), (0, 0))
+pic.paste(Image.open(os.path.join(script_directory, 'image/test.png')), (0, 0))
 
 # Create header text
 header_text = f"Hello, {cfg.NAME}"
