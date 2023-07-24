@@ -36,9 +36,22 @@ def utc_to_local(utc_dt):
 def fig2img(fig):
     # Convert a Matplotlib figure to a PIL Image and return it
     buf = BytesIO()
-    fig.savefig(buf, dpi=72)
+    fig.savefig(buf, dpi=72, transparent=True)
     buf.seek(0)
     img = Image.open(buf)
+
+    data = np.array(img)
+
+    # Select all black pixels regardless of the alpha value
+    mask = (data[..., :3] == [0, 0, 0]).all(axis=-1)
+
+    # Change these pixels to white, while keeping their original alpha values
+    data[mask, :3] = 255
+
+    img = Image.fromarray(data)
+
+    img.save('weather.png')
+
     return img
 
 def get_weather(apikey, length, width):

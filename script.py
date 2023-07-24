@@ -14,6 +14,7 @@ FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
+FONT_COLOR = 'white'
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 # Get app config from absolute file path
@@ -33,6 +34,9 @@ font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
 font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
 font_big = ImageFont.truetype(FONT_PATH_BOLD, FONT_SIZE_BIG)
 
+# Add background image
+pic.paste(Image.open('image/test.png'), (0, 0))
+
 # Create header text
 header_text = f"Hello, {cfg.NAME}"
 if current_time.hour < 12:
@@ -42,21 +46,24 @@ elif 12 <= current_time.hour < 17:
 elif 17 <= current_time.hour:
     header_text = f"Good evening, {cfg.NAME}"
 
-draw.text((20, 20), header_text, fill='black', font=font_big)
+draw.text((20, 20), header_text, fill=FONT_COLOR, font=font_big)
+
+draw.text((590, 10), f"Last updated: {current_time.strftime('%I:%M %p')}", fill=FONT_COLOR, font=font_small)
 
 # Create RSS feed
-feed = print_top_headlines(cfg.RSS_URL, 8)
+feed = print_top_headlines(cfg.RSS_URL, 7)
 for i, item in enumerate(feed):  # get data for 24 hours 
-    draw.text((20, 60 + i*20), item.title, fill='black', font=font_small)
+    draw.text((20, 60 + i*20), item.title, fill=FONT_COLOR, font=font_small)
 
 # Draw weather
 fig = get_weather(cfg.OPENWEATHERMAP_API_KEY, 12, 4)
 fig = fig2img(fig)
-pic.paste(fig, (-25, 200))
+pic.paste(fig, (-25, 200), fig)
 
 # Save the image
 pic.save(os.path.join(script_directory, 'weather_forecast.png'))
 
 # Render to EPD
-display_image(pic)
+if cfg.EPD:
+    display_image(pic, display_type=cfg.EPD)
 
