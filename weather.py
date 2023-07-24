@@ -18,11 +18,15 @@ FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-fonts = {'size': 16}
+fonts = {'size': 16, 'weight': 'bold'}
+fonts_big = {
+    'size': 20,
+    'weight': 'bold'
+}
 eastern = pytz.timezone('US/Eastern')
 
 # Set the font size
-plt.rc('font', size=FONT_SIZE)
+plt.rc('font', **fonts_big)
 plt.rc('axes', titlesize=FONT_SIZE_SMALL)
 plt.rc('axes', labelsize=FONT_SIZE_SMALL)
 plt.rc('legend', fontsize=FONT_SIZE)
@@ -141,6 +145,6 @@ def get_weather(apikey, length, width):
 
     # Add labels and title
     plt.ylabel('Temperature (F)')
-    plt.title(f"{current_time.strftime('%A, %B %d')} - {data['daily'][0]['summary']}", fontdict={'size': 20})
+    plt.title(f"{current_time.strftime('%A, %B %d')} - {data['daily'][0]['summary']}", fontdict=fonts_big)
 
     return plt

@@ -9,7 +9,7 @@ import pytz
 
 # Define constants
 WIDTH, HEIGHT = 800, 480
-FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
@@ -48,7 +48,8 @@ elif 17 <= current_time.hour:
 
 draw.text((20, 20), header_text, fill=FONT_COLOR, font=font_big)
 
-draw.text((590, 10), f"Last updated: {current_time.strftime('%I:%M %p')}", fill=FONT_COLOR, font=font_small)
+# last updated
+draw.text((580, 10), f"Last updated: {current_time.strftime('%I:%M %p')}", fill=FONT_COLOR, font=font_small)
 
 # Create RSS feed
 feed = print_top_headlines(cfg.RSS_URL, 7)
