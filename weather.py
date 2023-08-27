@@ -15,10 +15,10 @@ LOCATION = 'Boston'  # Your location
 LAT = 42.3875968
 LON = -71.0994968
 FONT_SIZE = 20
-FONT_SIZE_SMALL = 16
+FONT_SIZE_SMALL = 12
 
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-fonts = {'size': 16, 'weight': 'bold'}
+fonts = {'size': 14, 'weight': 'bold'}
 fonts_big = {
     'size': 20,
     'weight': 'bold'
