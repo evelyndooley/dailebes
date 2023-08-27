@@ -46,11 +46,11 @@ def fig2img(fig):
 
     data = np.array(img)
 
-    # Select all black pixels regardless of the alpha value
-    mask = (data[..., :3] == [0, 0, 0]).all(axis=-1)
+    # # Select all black pixels regardless of the alpha value
+    # mask = (data[..., :3] == [0, 0, 0]).all(axis=-1)
 
-    # Change these pixels to white, while keeping their original alpha values
-    data[mask, :3] = 255
+    # # Change these pixels to white, while keeping their original alpha values
+    # data[mask, :3] = 255
 
     img = Image.fromarray(data)
 
@@ -73,7 +73,7 @@ def get_weather(apikey, length, width):
     # Filter the data to include the current time and the next 7 hours
     filtered_times_and_temps = [
         item for item in times_and_temps
-        if current_time - timedelta(hours=1) <= item[0] <= current_time + timedelta(hours=21)
+        if current_time - timedelta(hours=1) <= item[0] <= current_time + timedelta(hours=11)
     ]
 
     # Add an entry for the current weather
@@ -86,15 +86,16 @@ def get_weather(apikey, length, width):
     icons = [item[2] for item in filtered_times_and_temps]
 
     fig, ax = plt.subplots(figsize=(length, width))  
+    ax.set_yticklabels([])
 
     # Add temperature values and weather icons as data point labels
     for i, icon in enumerate(icons):
         if i % 2:
             continue
         # Add the temperature value as a label
-        offset_val = 1.5
         avg = sum(temps) / len(temps)
-        if temps[i] >= avg: offset_val = -3
+        offset_val = 0.01*avg
+        if temps[i] >= avg: offset_val = -0.02*avg
 
         ax.text(times[i], temps[i] + offset_val, str(int(temps[i])) + "°F", fontdict=fonts, zorder=5)
 
@@ -141,10 +142,13 @@ def get_weather(apikey, length, width):
         )
 
     # Format x-axis to show time
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p', tz="US/Eastern"))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%I', tz="US/Eastern"))
+
+    summary = data['daily'][0]['summary']
+    summary_trim = '\n'.join([summary[i:i+20] for i in range(0, len(summary), 20)])
 
     # Add labels and title
-    plt.ylabel('Temperature (F)')
-    plt.title(f"{current_time.strftime('%A, %B %d')} - {data['daily'][0]['summary']}", fontdict=fonts_big)
+    # plt.ylabel('Temperature (F)')
+    plt.title(summary_trim, fontdict=fonts_big)
 
     return plt

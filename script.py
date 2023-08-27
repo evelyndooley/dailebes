@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from weather import get_weather, fig2img
 from epd import display_image
 from rss import print_top_headlines
+from xkcd import xkcd
 import os
 import sys
 import pytz
@@ -14,7 +15,7 @@ FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
-FONT_COLOR = 'white'
+FONT_COLOR = 'black'
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 # Get app config from absolute file path
@@ -35,7 +36,7 @@ font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
 font_big = ImageFont.truetype(FONT_PATH_BOLD, FONT_SIZE_BIG)
 
 # Add background image
-pic.paste(Image.open(os.path.join(script_directory, 'image/test.png')), (0, 0))
+pic.paste(xkcd(script_directory), (-128, 0))
 
 # Create header text
 header_text = f"Hello, {cfg.NAME}"
@@ -49,17 +50,17 @@ elif 17 <= current_time.hour:
 draw.text((20, 20), header_text, fill=FONT_COLOR, font=font_big)
 
 # last updated
-draw.text((580, 10), f"Last updated: {current_time.strftime('%I:%M %p')}", fill=FONT_COLOR, font=font_small)
+draw.text((570, 10), f"Last updated: {current_time.strftime('%I:%M %p')}\n{current_time.strftime('%A, %B %d')}", fill=FONT_COLOR, font=font_small)
 
 # Create RSS feed
-feed = print_top_headlines(cfg.RSS_URL, 7)
-for i, item in enumerate(feed):  # get data for 24 hours 
-    draw.text((20, 60 + i*20), item.title, fill=FONT_COLOR, font=font_small)
+# feed = print_top_headlines(cfg.RSS_URL, 7)
+# for i, item in enumerate(feed):  # get data for 24 hours 
+#     draw.text((20, 60 + i*20), item.title, fill=FONT_COLOR, font=font_small)
 
 # Draw weather
-fig = get_weather(cfg.OPENWEATHERMAP_API_KEY, 12, 4)
+fig = get_weather(cfg.OPENWEATHERMAP_API_KEY, 4, 6)
 fig = fig2img(fig)
-pic.paste(fig, (-25, 200), fig)
+pic.paste(fig, (525, 75), fig)
 
 # Save the image
 pic.save(os.path.join(script_directory, 'weather_forecast.png'))
