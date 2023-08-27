@@ -23,6 +23,7 @@ def xkcd(path):
     filename = os.path.join(path, time_name)
 
     time_image = Image.open(filename)
+    img = time_image.crop((123, 0, 676,480))
 
-    return time_image
+    return img
 

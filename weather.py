@@ -47,10 +47,10 @@ def fig2img(fig):
     data = np.array(img)
 
     # # Select all black pixels regardless of the alpha value
-    # mask = (data[..., :3] == [0, 0, 0]).all(axis=-1)
+    mask = (data[..., :3] == [0, 0, 0]).all(axis=-1)
 
     # # Change these pixels to white, while keeping their original alpha values
-    # data[mask, :3] = 255
+    data[mask, :3] = 255
 
     img = Image.fromarray(data)
 

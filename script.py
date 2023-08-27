@@ -15,7 +15,7 @@ FONT_PATH_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_SIZE = 20
 FONT_SIZE_SMALL = 16
 FONT_SIZE_BIG = 32
-FONT_COLOR = 'black'
+FONT_COLOR = 'white'
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 # Get app config from absolute file path
@@ -28,15 +28,15 @@ else:
 eastern = pytz.timezone('US/Eastern')
 current_time = datetime.now().astimezone(eastern)
 
-# Create a new image with a white background
-pic = Image.new('RGB', (WIDTH, HEIGHT), 'white')
+# Create a new image
+pic = Image.new('RGB', (WIDTH, HEIGHT), 'black')
 draw = ImageDraw.Draw(pic)
 font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
 font_small = ImageFont.truetype(FONT_PATH, FONT_SIZE_SMALL)
 font_big = ImageFont.truetype(FONT_PATH_BOLD, FONT_SIZE_BIG)
 
 # Add background image
-pic.paste(xkcd(script_directory), (-128, 0))
+pic.paste(xkcd(script_directory), (0, 0))
 
 # Create header text
 header_text = f"Hello, {cfg.NAME}"
@@ -47,7 +47,7 @@ elif 12 <= current_time.hour < 17:
 elif 17 <= current_time.hour:
     header_text = f"Good evening, {cfg.NAME}"
 
-draw.text((20, 20), header_text, fill=FONT_COLOR, font=font_big)
+draw.text((20, 20), header_text, fill="black", font=font_big)
 
 # last updated
 draw.text((570, 10), f"Last updated: {current_time.strftime('%I:%M %p')}\n{current_time.strftime('%A, %B %d')}", fill=FONT_COLOR, font=font_small)
